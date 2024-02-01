@@ -7,7 +7,7 @@
     let
       inherit (nixpkgs) lib;
 
-      installer_minimal_config = {
+      installer_minimal_config = { pkgs, ... }: {
         imports = [
           "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
           ./modules/default.nix
@@ -16,6 +16,21 @@
         disabledModules = [ "profiles/all-hardware.nix" ];
 
         hardware.nvidia-jetpack.enable = true;
+
+        # Add some useful packages
+        environment.systemPackages = with pkgs; [
+          wget
+          curl
+          ripgrep
+          htop
+          tmux
+          git
+          pv
+          jq
+          pciutils
+          usbutils
+          rsync
+        ];
       };
 
       x86_packages = nixpkgs.legacyPackages.x86_64-linux.callPackage ./default.nix { };
